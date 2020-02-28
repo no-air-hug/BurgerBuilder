@@ -1,14 +1,11 @@
 import * as actionTypes from '../actions/actionTypes';
-import updatedObject from '../utility';
+import {updatedObject} from '../utility';
 
 const initialState={
-    ingredients: {
-        salad:0,
-        bacon:0,
-        cheese:0,
-        meat:0
-    },
-    totalPrice: 4
+    ingredients: null,
+    totalPrice: 4,
+    loading: false,
+    error: false
 };
 
 const INGREDIENT_PRICES ={
@@ -25,27 +22,27 @@ const reducer = (state = initialState, action) => {
             //     ...state.ingredients,
             //     [action.ingredientName]: state.ingredients[action.ingredientName] + 1
             // } )
-            return{
-                ...state,
+            return updatedObject(state, {
                 ingredients:{
                     ...state.ingredients,
                     [action.ingredientName]: state.ingredients[action.ingredientName] + 1
                 },
                 totalPrice: state.totalPrice + INGREDIENT_PRICES[action.ingredientName]
-            };
+            });
         case actionTypes.REMOVE_INGREDIENT:
-            return{
-                ...state,
+            return updatedObject(state,{
                 ingredients:{
                     ...state.ingredients,
                     [action.ingredientName]: state.ingredients[action.ingredientName] - 1
                 },
                 totalPrice: state.totalPrice - INGREDIENT_PRICES[action.ingredientName] //takes old price state and updates according to the ingredient name
-            };
+            });
+        case actionTypes.SET_INGREDIENTS:return updatedObject(state, {ingredients:{salad: action.ingredients.salad, bacon: action.ingredients.bacon, cheese: action.ingredients.cheese, meat: action.ingredients.meat}, error: false, totalPrice : 4})
+        case actionTypes.FETCH_INGREDIENTS_FAILED: return updatedObject(state, {error: true})
+
         default:
             return state;
     }
-    return state;
 };
 
 export default reducer;
