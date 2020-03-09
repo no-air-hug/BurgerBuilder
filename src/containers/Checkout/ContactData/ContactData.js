@@ -8,6 +8,7 @@ import {connect} from 'react-redux';
 import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler';
 import * as actions from '../../../store/actions/index';
 
+
 class ContactData extends Component{
     state={
         orderForm:{
@@ -106,7 +107,7 @@ class ContactData extends Component{
             price: this.props.price, // should be calculated on the server to prevent user data manipulation
             orderData: formData
         }
-        this.props.onOrderBurger(order)
+        this.props.onOrderBurger(order, this.props.token);
     }
 
     checkValidity(value, rules){
@@ -198,13 +199,14 @@ const mapStateToProps = state =>{
     return{
         ings: state.burgerBuilder.ingredients,
         price: state.burgerBuilder.totalPrice,
-        loading: state.order.loading
+        loading: state.order.loading,
+        token: state.auth.token
     };
 }
 
 const mapDispatchToProps = dispatch =>{
     return{
-        onOrderBurger: (orderData) => dispatch(actions.purchaseBurger(orderData))
+        onOrderBurger: (orderData, token) => dispatch(actions.purchaseBurger(orderData, token))
     };
 }
 export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(ContactData, axios));

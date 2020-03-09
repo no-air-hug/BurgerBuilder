@@ -5,7 +5,8 @@ const initialState={
     ingredients: null,
     totalPrice: 4,
     loading: false,
-    error: false
+    error: false,
+    building: false
 };
 
 const INGREDIENT_PRICES ={
@@ -22,22 +23,25 @@ const reducer = (state = initialState, action) => {
             //     ...state.ingredients,
             //     [action.ingredientName]: state.ingredients[action.ingredientName] + 1
             // } )
-            return updatedObject(state, {
-                ingredients:{
-                    ...state.ingredients,
-                    [action.ingredientName]: state.ingredients[action.ingredientName] + 1
-                },
-                totalPrice: state.totalPrice + INGREDIENT_PRICES[action.ingredientName]
-            });
+            const updatedIngredient = {[action.ingredientName]: state.ingredients[action.ingredientName] + 1}
+            const updatedIngredients = updatedObject(state.ingredients, updatedIngredient)
+            const updatedState = {
+                ingredients: updatedIngredients,
+                totalPrice: state.totalPrice + INGREDIENT_PRICES[action.ingredientName],
+                building: true
+            }
+            return updatedObject(state, updatedState);
+        
         case actionTypes.REMOVE_INGREDIENT:
-            return updatedObject(state,{
-                ingredients:{
-                    ...state.ingredients,
-                    [action.ingredientName]: state.ingredients[action.ingredientName] - 1
-                },
-                totalPrice: state.totalPrice - INGREDIENT_PRICES[action.ingredientName] //takes old price state and updates according to the ingredient name
-            });
-        case actionTypes.SET_INGREDIENTS:return updatedObject(state, {ingredients:{salad: action.ingredients.salad, bacon: action.ingredients.bacon, cheese: action.ingredients.cheese, meat: action.ingredients.meat}, error: false, totalPrice : 4})
+            const updatedIng = {[action.ingredientName]: state.ingredients[action.ingredientName] - 1}
+            const updatedIngs = updatedObject(state.ingredients, updatedIng)
+            const updatedSt = {
+                ingredients: updatedIngs,
+                totalPrice: state.totalPrice + INGREDIENT_PRICES[action.ingredientName],
+                building: true
+            }
+            return updatedObject(state, updatedSt);
+        case actionTypes.SET_INGREDIENTS: return updatedObject(state, {ingredients:{salad: action.ingredients.salad, bacon: action.ingredients.bacon, cheese: action.ingredients.cheese, meat: action.ingredients.meat}, error: false, totalPrice : 4, building: false})
         case actionTypes.FETCH_INGREDIENTS_FAILED: return updatedObject(state, {error: true})
 
         default:
