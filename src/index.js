@@ -11,7 +11,8 @@ import thunk from 'redux-thunk';
 import orderReducer from './store/reducer/order';
 import authReducer from './store/reducer/auth';
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+// using environment variables to set the redux extension to null in case the app is NOT in development mode
+const composeEnhancers = process.env.NODE_ENV === 'development' ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : null || compose;
 
 const rootReducer = combineReducers({
     burgerBuilder: burgerBuilderReducer,
